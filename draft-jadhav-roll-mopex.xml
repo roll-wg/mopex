@@ -224,8 +224,7 @@
                 The MOPex option MUST be used only if the base DIO MOP is 7. If
                 the base DIO MOP is 7 and if the MOPex option is not present
                 then the DIO MUST be silently ignored. If the base DIO MOP is
-                less than 7 then MOPex MUST NOT be used.  only if the base MOP
-                value is 7 and if the MOPex option is present. In case the base
+                less than 7 then MOPex MUST NOT be used. In case the base
                 MOP is 7 and if the MOPex option is present, then the
                 implementation MUST use the final MOP value from the MOPex.
             </t>
@@ -233,6 +232,14 @@
                 Note that <xref target="RFC6550"/> allows the node who does not
                 support the received MOP to still join the network as a leaf
                 node. This semantic continues to be true even in case of MOPex.
+            </t>
+        </section>
+        <section title="Use of MOPex for MOP less than equal to 6">
+            <t>
+                The current set of MOPs (values 0-6) could also be used in
+                MOPex. The use of current MOPs in MOPex indicates that the MOP
+                is supported with extended set of semantics for e.g., the
+                capability options <xref target="I-D.ietf-roll-mopex-cap"/>.
             </t>
         </section>
     </section>
@@ -333,34 +340,13 @@
     <references title="Normative References">
         <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
         &RFC2119;
+        &RFC6550;
     </references>
 
     <references title="Informative References">
         <!-- Here we use entities that we defined at the beginning. -->
-        &RFC6550;
+		<?rfc include='reference.I-D.ietf-roll-mopex-cap'?>	<!-- Capabilities draft -->
     </references>
-
-    <section anchor="app-additional" title="Capability Handshake Example">
-        <t>
-            <figure align="center" anchor="cap-handshake-example"
-                title="Capabilities Option"><artwork align="center"><![CDATA[
-Root          6LR          6LN
- |             |            |
- |   DIO(CS1)  |            |
- |------------>|  DIO(CS1)  |
- |             |----------->|
- |             |            |
- |             |   DAO(CS2) |
- |             |<-----------|
- |   DAO(CS2)  |            |
- |<------------|            |
- |             |            |
-CS: Capabilities Set
-CS1: Capabilities set advertised by root
-CS2: Capabilities set advertised by node. CS2 is a subset of CS1.
-               ]]></artwork> </figure>
-        </t>
-    </section>
 
 </back>
 </rfc>
