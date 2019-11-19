@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="US-ASCII"?>
+<!-- This template is for creating an Internet Draft using xml2rfc,
+     which is available here: http://xml.resource.org. -->
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+<!-- One method to get references from the online citation libraries.
+     There has to be one entity for each item to be referenced.
+     An alternate method (rfc include) is described in the references. -->
+
+<!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
+<!ENTITY RFC6550 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6550.xml">
+<!ENTITY RFC6345 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6345.xml">
+<!ENTITY RFC6775 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6775.xml">
+<!ENTITY RFC5191 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5191.xml">
+]>
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs),
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+<rfc category="std" docName="draft-jadhav-roll-mopex-latest" ipr="trust200902">
+    <!-- category values: std, bcp, info, exp, and historic
+     ipr values: full3667, noModification3667, noDerivatives3667
+     you can add the attributes updates="NNNN" and obsoletes="NNNN"
+     they will automatically be output with "(if approved)" -->
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+      <!-- The abbreviated title is used in the page header - it is only necessary if the
+         full title is longer than 39 characters -->
+
+    <title abbrev="MOP extension">Mode of Operation extension</title>
+
+    <author fullname="Rahul Arvind Jadhav" initials="R.A." role="editor" surname="Jadhav">
+        <organization>Huawei Tech</organization>
+        <address>
+            <postal>
+                <street>Kundalahalli Village, Whitefield,</street>
+                <city>Bangalore</city>
+                <region>Karnataka</region>
+                <code>560037</code>
+                <country>India</country>
+            </postal>
+            <phone>+91-080-49160700</phone>
+            <email>rahul.ietf@gmail.com</email>
+        </address>
+    </author>
+    <author initials="P" surname="Thubert" fullname="Pascal Thubert">
+        <organization abbrev="Cisco">Cisco Systems, Inc</organization>
+        <address>
+            <postal>
+                <street>Building D</street>
+                <street>45 Allee des Ormes - BP1200 </street>
+                <city>MOUGINS - Sophia Antipolis</city>
+                <code>06254</code>
+                <country>France</country>
+            </postal>
+            <phone>+33 497 23 26 34</phone>
+            <email>pthubert@cisco.com</email>
+        </address>
+    </author>
+    <author initials="M." surname="Richardson" fullname="Michael Richardson">
+      <organization>Sandelman Software Works</organization>
+      <address>
+        <email>mcr+ietf@sandelman.ca</email>
+      </address>
+    </author>
+
+    <date/>
+
+    <area>General</area>
+
+    <workgroup>ROLL</workgroup>
+
+    <!-- WG name at the upperleft corner of the doc,
+         IETF is fine for individual submissions.
+     If this element is not present, the default is "Network Working Group",
+         which is used by the RFC Editor as a nod to the history of the IETF. -->
+
+    <keyword>RPL, mesh, MOP, extension, capability, capabilities</keyword>
+
+    <!-- Keywords will be incorporated into HTML output
+         files in a meta tag but they have no effect on text or nroff
+         output. If you submit your draft to the RFC Editor, the
+         keywords will be used for the search engine. -->
+
+    <abstract>
+        <t>
+            RPL allows different mode of operations which allows nodes to have
+            a consensus on the basic primitives that must be supported to join
+            the network. The MOP field in RFC6550 is of 3 bits and is fast
+            depleting.  This document extends the MOP for future use by the 
+        </t>
+    </abstract>
+</front>
+
+<middle>
+    <section title="Introduction">
+        <t>
+            RPL <xref target="RFC6550"/> specifies a proactive distance-vector
+            based routing scheme. The protocol creates a DAG-like structure
+            which operates with a given "Mode of Operation" (MOP) determining the
+            minimal and mandatory set of primitives to be supported by all the
+            participating nodes.
+        </t>
+        <t>
+            MOP as per <xref target="RFC6550"/> is a 3-bit value carried in DIO
+            messages and is specific to the RPL Instance. The receipient of the
+            DIO message can join the specified network as a router only when it
+            can support the primitives as required by the mode of operation
+            value. For example, in case of MOP=3 (Storing MOP with multicast
+            support) the nodes can join the network as routers only when they
+            can handle the DAO advertisements from the peers and manage routing
+            tables. The 3-bit value is already exhausted and requires
+            replenishment. This document introduces a mechanism to extend mode
+            of operation values.
+        </t>
+
+        <section title="Requirements Language and Terminology">
+            <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+                NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
+                in this document are to be interpreted as described in <xref
+                    target="RFC2119">RFC 2119</xref>.</t>
+
+            <t>
+                MOP: Mode of Operation. Identifies the mode of operation of the
+                RPL Instance as administratively provisioned at and distributed
+                by the DODAG root.
+            </t>
+
+            <t>
+                MOPex: Extended MOP: This document extends the MOP values over
+                a bigger range. This extension of MOP is called MOPex.
+            </t>
+
+            <t>
+                DAO: DODAG Advertisement Object. An RPL message used to
+                advertise the target information in order to establish routing
+                adjacencies.
+            </t>
+
+            <t>
+                DIO: DODAG Information Object. An RPL message initiated by the
+                root and is used to advertise the network configuration
+                information.
+            </t>
+
+            <t>
+                Current parent: Parent 6LR node before switching to the new
+                path.
+            </t>
+
+            <t>
+                This document uses terminology described in <xref
+                    target="RFC6550"/>. For the sake of readability all the
+                known relevant terms are repeated in this section.
+            </t>
+        </section>
+    </section>
+
+    <section anchor="requirements" title="Requirements for this document">
+        <t>
+            Following are the requirements considered for this documents:
+            <list style="format REQ%d:">
+                <t>
+                    MOP extension. Current MOP of 3-bit is fast depleting. An
+                    MOP extension needs to extend the possibility of adding new
+                    MOPs in the future.
+                </t>
+                <t>
+                    Backwards compatibility. The new options and new fields in
+                    the DIO message should be backward compatible i.e. if there
+                    are nodes which support old MOPs they could still operate
+                    in their own instances.
+                </t>
+            </list>
+        </t>
+    </section>
+
+    <section anchor="ext_mop" title="Extended MOP Control Message Option">
+        <t>
+            This document reserves existing MOP value 7 to be used as an
+            extender. DIO messages with MOP value of 7 may refer to the
+            Extended MOP (MOPex) option in the DIO message.
+        </t>
+        <t>
+            <figure align="center" anchor="mopex-opt" title="Extended MOP
+            Option"><artwork align="center"><![CDATA[
+ 0                   1                   2
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---------------
+|   Type = TODO |  Opt Length   |     OP-value
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---------------
+           ]]></artwork> </figure>
+        </t>
+        <t>
+            The option length value MUST be less than or equal to 2. An option
+            length value of zero is invalid and the implementation MUST
+            silently ignore the DIO on receiving a value of zero.
+        </t>
+        <section title="Handling MOPex">
+            <t>
+                The MOPex option MUST be used only if the base DIO MOP is 7. If
+                the base DIO MOP is 7 and if the MOPex option is not present
+                then the DIO MUST be silently ignored. If the base DIO MOP is
+                less than 7 then MOPex MUST NOT be used.  only if the base MOP
+                value is 7 and if the MOPex option is present. In case the base
+                MOP is 7 and if the MOPex option is present, then the
+                implementation MUST use the final MOP value from the MOPex.
+            </t>
+            <t>
+                Note that <xref target="RFC6550"/> allows the node who does not
+                support the received MOP to still join the network as a leaf
+                node. This semantic continues to be true even in case of MOPex.
+            </t>
+        </section>
+    </section>
+
+    <section anchor="imp-con" title="Implementation Considerations">
+        <t>
+            <xref target = "RFC6550" />, it was possible to discard an
+            unsupported DIO-MOP just by inspecting the base message. With this
+            document, the MOPex is a different control message option and thus
+            the discarding of the DIO message could happen after inspecting the
+            message options.
+        </t>
+    </section>
+
+    <section anchor="Acknowledgements" title="Acknowledgements">
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+        <section title="Mode of operation: MOPex">
+            <t>
+                IANA is requested to assign a new Mode of Operation, named
+                "MOPex" for MOP extension under the RPL registry. The value of
+                7 is to be assigned from the "Mode of Operation" space <xref
+                    target="RFC6550"/>
+            </t>
+            <texttable title="Mode of Operation">
+                <ttcol align='center'>Value</ttcol>
+                <ttcol align='center'>Description</ttcol>
+                <ttcol align='center'>Reference</ttcol>
+
+                <c>7</c>
+                <c>MOPex</c>
+                <c>This document</c>
+            </texttable>
+        </section>
+        <section title="New options: MOPex and Capabilities">
+            <t>
+                A new entry is required for supporting new option "MOPex" in
+                the "RPL Control Message Options" space <xref
+                    target="RFC6550"/>.
+            </t>
+            <texttable title="New options">
+                <ttcol align='center'>Value</ttcol>
+                <ttcol align='center'>Meaning</ttcol>
+                <ttcol align='center'>Reference</ttcol>
+
+                <c>TBD1</c>
+                <c>MOPex</c>
+                <c>This document</c>
+            </texttable>
+        </section>
+        <section title="New Registry for Extended-MOP-value">
+            <t>
+                IANA is requested to create a registry for the
+                extended-MOP-value (MOPex). This registry should be located in
+                TODO.  New MOPex values may be allocated only by an IETF
+                review. Currently no values are defined by this document. Each
+                value is tracked with the following qualities:
+                <list style="symbols">
+                    <t>MOPex value</t>
+                    <t>Description</t>
+                    <t>Defining RFC</t>
+                </list>
+            </t>
+        </section>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+        <t>
+            The options defined in this document are carried in the base
+            message objects as defined in <xref target = "RFC6550" />. The RPL
+            control message options are protected by the same security
+            mechanisms that protect the base messages.
+        </t>
+        <t>
+            Capabilities flag can reveal that the node has been upgraded or is
+            running a old feature set. This document assumes that the base
+            messages that carry these options are protected by RPL security
+            mechanisms and thus are not visible to a malicious node.
+        </t>
+    </section>
+</middle>
+
+<back>
+    <!-- References split into informative and normative -->
+
+    <!-- There are 2 ways to insert reference entries from the citation libraries:
+     1. define an ENTITY at the top, and use "ampersand character"RFC2629; here (as shown)
+     2. simply use a PI "less than character"?rfc include="reference.RFC.2119.xml"?> here
+        (for I-Ds: include="reference.I-D.narten-iana-considerations-rfc2434bis.xml")
+
+     Both are cited textually in the same manner: by using xref elements.
+     If you use the PI option, xml2rfc will, by default, try to find included files in the same
+     directory as the including file. You can also define the XML_LIBRARY environment variable
+     with a value containing a set of directories to search.  These can be either in the local
+     filing system or remote ones accessed by http (http://domain/dir/... ).-->
+
+    <references title="Normative References">
+        <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
+        &RFC2119;
+    </references>
+
+    <references title="Informative References">
+        <!-- Here we use entities that we defined at the beginning. -->
+        &RFC6550;
+    </references>
+
+    <section anchor="app-additional" title="Capability Handshake Example">
+        <t>
+            <figure align="center" anchor="cap-handshake-example"
+                title="Capabilities Option"><artwork align="center"><![CDATA[
+Root          6LR          6LN
+ |             |            |
+ |   DIO(CS1)  |            |
+ |------------>|  DIO(CS1)  |
+ |             |----------->|
+ |             |            |
+ |             |   DAO(CS2) |
+ |             |<-----------|
+ |   DAO(CS2)  |            |
+ |<------------|            |
+ |             |            |
+CS: Capabilities Set
+CS1: Capabilities set advertised by root
+CS2: Capabilities set advertised by node. CS2 is a subset of CS1.
+               ]]></artwork> </figure>
+        </t>
+    </section>
+
+</back>
+</rfc>
