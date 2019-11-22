@@ -234,12 +234,13 @@
                 node. This semantic continues to be true even in case of MOPex.
             </t>
         </section>
-        <section title="Use of MOPex for MOP less than equal to 6">
+        <section title="Use of values 0-6 in the MOPex option">
             <t>
-                The current set of MOPs (values 0-6) could also be used in
-                MOPex. The use of current MOPs in MOPex indicates that the MOP
-                is supported with extended set of semantics for e.g., the
-                capability options <xref target="I-D.ietf-roll-mopex-cap"/>.
+                The MOPex option could also be allowed to re-use the values
+                0-6, which have been used for MOP so far.  The use of current
+                MOPs in MOPex indicates that the MOP is supported with extended
+                set of semantics for e.g., the capability options <xref
+                    target="I-D.ietf-roll-mopex-cap"/>.
             </t>
         </section>
     </section>
