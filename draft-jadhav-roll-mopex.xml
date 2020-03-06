@@ -109,8 +109,9 @@
         <t>
             RPL allows different mode of operations which allows nodes to have
             a consensus on the basic primitives that must be supported to join
-            the network. The MOP field in RFC6550 is of 3 bits and is fast
-            depleting.  This document extends the MOP for future use.
+            the network. The MOP field in <xref target="RFC6550"/> is of 3 bits
+            and is fast depleting. This document extends the MOP for future
+            use.
         </t>
     </abstract>
 </front>
@@ -240,7 +241,7 @@
                 0-6, which have been used for MOP so far.  The use of current
                 MOPs in MOPex indicates that the MOP is supported with extended
                 set of semantics for e.g., the capability options <xref
-                    target="I-D.ietf-roll-mopex-cap"/>.
+                    target="I-D.ietf-roll-capabilities"/>.
             </t>
         </section>
     </section>
@@ -346,7 +347,7 @@
 
     <references title="Informative References">
         <!-- Here we use entities that we defined at the beginning. -->
-		<?rfc include='reference.I-D.ietf-roll-mopex-cap'?>	<!-- Capabilities draft -->
+		<?rfc include='reference.I-D.ietf-roll-capabilities'?>	<!-- Capabilities draft -->
     </references>
 
 </back>
