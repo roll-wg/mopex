@@ -141,9 +141,9 @@
             This document further extends the RPL Control Option syntax to
             handle generic flags. The primary aim of these flags is to define
             the behaviour of a node not supporting the given control type. If a
-            node does not support a given RPL Control Option, there are three
+            node does not support a given RPL Control Option, there are following
             possibilities:
-            <list style="format REQ%d:">
+            <list>
                 <t> Strip off the option </t>
                 <t> Copy the option as-is </t>
                 <t> Ignore the message containing this option </t>
