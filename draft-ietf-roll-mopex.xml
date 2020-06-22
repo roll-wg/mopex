@@ -137,6 +137,19 @@
             replenishment. This document introduces a mechanism to extend mode
             of operation values.
         </t>
+        <t>
+            This document further extends the RPL Control Option syntax to
+            handle generic flags. The primary aim of these flags is to define
+            the behaviour of a node not supporting the given control type. If a
+            node does not support a given RPL Control Option, there are following
+            possibilities:
+            <list>
+                <t> Strip off the option </t>
+                <t> Copy the option as-is </t>
+                <t> Ignore the message containing this option </t>
+                <t> Let the node join in only as a 6LN to this parent </t>
+            </list>
+        </t>
 
         <section title="Requirements Language and Terminology">
             <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
@@ -245,6 +258,86 @@
             </t>
         </section>
     </section>
+    <section title="Extending RPL Control Options">
+        <t>
+            Section 6.7.1 of RFC6550 explains the RPL Control Message Option
+            Generic Format. This document extends this format to following:
+        </t>
+        <t>
+            <figure align="center" anchor="ext-opt"
+                title="Extended RPL Option Format"><artwork align="center">
+                    <![CDATA[
+ 0                   1                   2
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-----------
+| |X| OptionType| Option Length |Opt Flags|J|I|C| Option Data
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-----------
+           ]]></artwork> </figure>
+        </t>
+        <t>
+            New fields in extended RPL Control Message Option Format:
+            <list>
+                <t>
+                    'X' bit in Option Type: Value 1 indicates that this is an
+                    extended option. If the 'X' flag is set, a 1 byte Option
+                    Flags follows the Option Length field.
+                </t>
+                <t>
+                    Option Length: 8-bit unsigned integer, representing the
+                    length in octets of the option, not including the Option
+                    Type and Length fields. Option Flags and variable length
+                    Option Data fields are included in the length.
+                </t>
+                <t>
+                    'J' (Join) bit in Option Flags: A node MUST join only as a
+                    6LN if the Option Type is not understood.
+                </t>
+                <t>
+                    'C' (Copy) bit in Option Flags: A node which does not
+                    understand the Option Type MUST copy the Option while
+                    generating the corresponding message. For e.g., if a 6LR
+                    receives a DIO message with an unknown Option with 'C' bit
+                    set and if the 6LR choses to accept this node as the
+                    preferred parent then the node MUST copy this option in the
+                    subsequent DIO message it generates. Alternatively, if the
+                    'C' flag is unset the node MUST strip off the option and
+                    process the message.
+                </t>
+                <t>
+                    'I' (Ignore) bit in Option Flags: A node which does not
+                    understand the Option Type MUST ignore this whole message if
+                    the 'I' bit is set. If 'I' bit is set than the value of 'J'
+                    and 'C' bits are irrelevant and the message MUST be ignored.
+                </t>
+            </list>
+        </t>
+        <t>
+            Note that this format does not deprecate the previous format, it
+            simply extends it and the new format is applicable only when 2nd bit
+            ('X' flag) of the Option Type is set. Option Type 0x40 to 0x7F are
+            thus applicable only as extended options.
+        </t>
+        <texttable anchor="table_bits" title="Option Flags handling">
+            <ttcol align='center'>'J' bit</ttcol>
+            <ttcol align='center'>'C' bit</ttcol>
+            <ttcol align='center'>Handling</ttcol>
+
+            <c>0</c>
+            <c>0</c>
+            <c>Strip off the option, and the node can join as 6LR</c>
+            <c>0</c>
+            <c>1</c>
+            <c>Copy the option, and the node can join as 6LR</c>
+            <c>1</c>
+            <c>NA</c>
+            <c>Join as 6LN</c>
+        </texttable>
+        <t>
+            If a node receives an unknown Option without 'X' flag set then the
+            node MUST ignore the option and process the message. The option MUST
+            be treated as if J=0, C=0, I=0.
+        </t>
+    </section>
 
     <section anchor="imp-con" title="Implementation Considerations">
         <t>
@@ -257,6 +350,9 @@
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
+        <t>
+            Using 'I' bit was Pascal Thubert's idea.
+        </t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
