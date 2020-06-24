@@ -127,7 +127,7 @@
         </t>
         <t>
             MOP as per <xref target="RFC6550"/> is a 3-bit value carried in DIO
-            messages and is specific to the RPL Instance. The receipient of the
+            messages and is specific to the RPL Instance. The recipient of the
             DIO message can join the specified network as a router only when it
             can support the primitives as required by the mode of operation
             value. For example, in case of MOP=3 (Storing MOP with multicast
@@ -176,7 +176,7 @@
 
             <t>
                 DIO: DODAG Information Object. An RPL message initiated by the
-                root and is used to advertise the network configuration
+                root and used to advertise the network configuration
                 information.
             </t>
 
@@ -206,7 +206,7 @@
                     Backwards compatibility. The new options and new fields in
                     the DIO message should be backward compatible i.e. if there
                     are nodes which support old MOPs they could still operate
-                    in their own instances.
+                    in their own RPL Instances.
                 </t>
             </list>
         </t>
@@ -243,9 +243,9 @@
                 implementation MUST use the final MOP value from the MOPex.
             </t>
             <t>
-                Note that <xref target="RFC6550"/> allows the node who does not
+                Note that <xref target="RFC6550"/> allows a node that does not
                 support the received MOP to still join the network as a leaf
-                node. This semantic continues to be true even in case of MOPex.
+                node. This semantics continues to be true even in case of MOPex.
             </t>
         </section>
         <section title="Use of values 0-6 in the MOPex option">
@@ -293,7 +293,7 @@
                     6LN if the Option Type is not understood.
                 </t>
                 <t>
-                    'C' (Copy) bit in Option Flags: A node which does not
+                    'C' (Copy) bit in Option Flags: A node that does not
                     understand the Option Type MUST copy the Option while
                     generating the corresponding message. For e.g., if a 6LR
                     receives a DIO message with an unknown Option with 'C' bit
@@ -304,7 +304,7 @@
                     process the message.
                 </t>
                 <t>
-                    'I' (Ignore) bit in Option Flags: A node which does not
+                    'I' (Ignore) bit in Option Flags: A node that does not
                     understand the Option Type MUST ignore this whole message if
                     the 'I' bit is set. If 'I' bit is set than the value of 'J'
                     and 'C' bits are irrelevant and the message MUST be ignored.
@@ -341,10 +341,10 @@
 
     <section anchor="imp-con" title="Implementation Considerations">
         <t>
-            <xref target = "RFC6550" />, it was possible to discard an
+            In <xref target = "RFC6550" />, it was possible to discard an
             unsupported DIO-MOP just by inspecting the base message. With this
             document, the MOPex is a different control message option and thus
-            the discarding of the DIO message could happen after inspecting the
+            the discarding of the DIO message can only happen after inspecting the
             message options.
         </t>
     </section>
