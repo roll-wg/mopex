@@ -258,7 +258,7 @@
             </t>
         </section>
     </section>
-    <section title="Extending RPL Control Options">
+    <section title="Extending RPL Control Options" anchor="ext-opts">
         <t>
             Section 6.7.1 of RFC6550 explains the RPL Control Message Option
             Generic Format. This document extends this format to following:
@@ -270,7 +270,7 @@
  0                   1                   2
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-----------
-| |X| OptionType| Option Length |Opt Flags|J|I|C| Option Data
+|X|   OptionType| Option Length |Opt Flags|J|I|C| Option Data
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-----------
            ]]></artwork> </figure>
         </t>
@@ -314,7 +314,7 @@
         <t>
             Note that this format does not deprecate the previous format, it
             simply extends it and the new format is applicable only when 2nd bit
-            ('X' flag) of the Option Type is set. Option Type 0x40 to 0x7F are
+            ('X' flag) of the Option Type is set. Option Type 0x80 to 0xFF are
             thus applicable only as extended options.
         </t>
         <texttable anchor="table_bits" title="Option Flags handling">
@@ -351,7 +351,8 @@
 
     <section anchor="Acknowledgements" title="Acknowledgements">
         <t>
-            Using 'I' bit was Pascal Thubert's idea.
+            Thank you Dominique Barthel for important review/feedback on
+            extending Control Options.
         </t>
     </section>
 
@@ -401,6 +402,29 @@
                     <t>Description</t>
                     <t>Defining RFC</t>
                 </list>
+            </t>
+        </section>
+        <section title="Change in RPL Control Option field">
+            <t>
+                <xref target="ext-opts"/> of this document specifies MSB of the
+                RPL Control Option to be used as a bit to indicate RPL Extended
+                Control Options.
+            </t>
+            <t>
+                IANA is requested to reduce the unassigned values range from
+                0x10 to 0x7f for RPL Control Options.
+            </t>
+            <t>
+                IANA is requested to create a new registry for RPL Extended
+                Control Options indicating values 0x80 to 0xff. New values may
+                be allocated only by an IETF Review. Each value is tracked with
+                the following qualities:
+                <list style="symbols">
+                    <t>Value</t>
+                    <t>Meaning</t>
+                    <t>Defining RFC</t>
+                </list>
+                The value could be in the range of 0x80 to 0xff.
             </t>
         </section>
     </section>
