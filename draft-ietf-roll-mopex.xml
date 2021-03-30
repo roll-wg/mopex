@@ -121,8 +121,8 @@
         <t>
             RPL <xref target="RFC6550"/> specifies a proactive distance-vector
             based routing scheme. The protocol creates a DAG-like structure
-            which operates with a given "Mode of Operation" (MOP) determining the
-            minimal and mandatory set of primitives to be supported by all the
+            that operates with a given "Mode of Operation" (MOP) determining the
+            minimum and mandatory set of primitives to be supported by all the
             participating nodes.
         </t>
         <t>
@@ -130,17 +130,17 @@
             messages and is specific to the RPL Instance. The recipient of the
             DIO message can join the specified network as a router only when it
             can support the primitives as required by the mode of operation
-            value. For example, in case of MOP=3 (Storing MOP with multicast
-            support) the nodes can join the network as routers only when they
+            value. For example, in the case of MOP=3 (Storing MOP with multicast
+            support), the nodes can join the network as routers only when they
             can handle the DAO advertisements from the peers and manage routing
             tables. The 3-bit value is already exhausted and requires
-            replenishment. This document introduces a mechanism to extend mode
+            replenishment. This document introduces a mechanism to extend the mode
             of operation values.
         </t>
         <t>
             This document further extends the RPL Control Option syntax to
             handle generic flags. The primary aim of these flags is to define
-            the behaviour of a node not supporting the given control type. If a
+            the behavior of a node not supporting the given control type. If a
             node does not support a given RPL Control Option, there are following
             possibilities:
             <list>
@@ -170,7 +170,7 @@
 
             <t>
                 DAO: DODAG Advertisement Object. An RPL message used to
-                advertise the target information in order to establish routing
+                advertise the target information to establish routing
                 adjacencies.
             </t>
 
@@ -186,8 +186,8 @@
             </t>
 
             <t>
-                This document uses terminology described in <xref
-                    target="RFC6550"/>. For the sake of readability all the
+                This document uses the terminology described in <xref
+                    target="RFC6550"/>. For the sake of readability, all the
                 known relevant terms are repeated in this section.
             </t>
         </section>
@@ -198,15 +198,15 @@
             Following are the requirements considered for this documents:
             <list style="format REQ%d:">
                 <t>
-                    MOP extension. Current MOP of 3-bit is fast depleting. An
-                    MOP extension needs to extend the possibility of adding new
-                    MOPs in the future.
+					MOP extension. The 3-bits MOP as defined in [RFC6550] is
+					fast depleting. An MOP extension needs to extend the
+					possibility of adding new MOPs in the future.
                 </t>
                 <t>
                     Backwards compatibility. The new options and new fields in
                     the DIO message should be backward compatible i.e. if there
-                    are nodes which support old MOPs they could still operate
-                    in their own RPL Instances.
+                    are nodes that support old MOPs they could still operate
+                    in their RPL Instances.
                 </t>
             </list>
         </t>
@@ -214,8 +214,8 @@
 
     <section anchor="ext_mop" title="Extended MOP Control Message Option">
         <t>
-            This document reserves existing MOP value 7 to be used as an
-            extender. DIO messages with MOP value of 7 may refer to the
+            This document reserves the existing MOP value 7 to be used as an
+            extender. DIO messages with an MOP value of 7 MUST refer to the
             Extended MOP (MOPex) option in the DIO message.
         </t>
         <t>
@@ -245,15 +245,15 @@
             <t>
                 Note that <xref target="RFC6550"/> allows a node that does not
                 support the received MOP to still join the network as a leaf
-                node. This semantics continues to be true even in case of MOPex.
+                node. This semantics continues to be true even in the case of MOPex.
             </t>
         </section>
         <section title="Use of values 0-6 in the MOPex option">
             <t>
                 The MOPex option could also be allowed to re-use the values
                 0-6, which have been used for MOP so far.  The use of current
-                MOPs in MOPex indicates that the MOP is supported with extended
-                set of semantics for e.g., the capability options <xref
+                MOPs in MOPex indicates that the MOP is supported with an extended
+                set of semantics e.g., the capability options <xref
                     target="I-D.ietf-roll-capabilities"/>.
             </t>
         </section>
@@ -279,7 +279,7 @@
             <list>
                 <t>
                     'X' bit in Option Type: Value 1 indicates that this is an
-                    extended option. If the 'X' flag is set, a 1 byte Option
+                    extended option. If the 'X' flag is set, a 1-byte Option
                     Flags follows the Option Length field.
                 </t>
                 <t>
@@ -295,9 +295,9 @@
                 <t>
                     'C' (Copy) bit in Option Flags: A node that does not
                     understand the Option Type MUST copy the Option while
-                    generating the corresponding message. For e.g., if a 6LR
+                    generating the corresponding message. E.g., if a 6LR
                     receives a DIO message with an unknown Option with 'C' bit
-                    set and if the 6LR choses to accept this node as the
+                    set and if the 6LR chooses to accept this node as the
                     preferred parent then the node MUST copy this option in the
                     subsequent DIO message it generates. Alternatively, if the
                     'C' flag is unset the node MUST strip off the option and
@@ -306,7 +306,7 @@
                 <t>
                     'I' (Ignore) bit in Option Flags: A node that does not
                     understand the Option Type MUST ignore this whole message if
-                    the 'I' bit is set. If 'I' bit is set than the value of 'J'
+                    the 'I' bit is set. If the 'I' bit is set then the value of 'J'
                     and 'C' bits are irrelevant and the message MUST be ignored.
                 </t>
             </list>
@@ -467,7 +467,7 @@
 
     <references title="Informative References">
         <!-- Here we use entities that we defined at the beginning. -->
-		<?rfc include='reference.I-D.ietf-roll-capabilities'?>	<!-- Capabilities draft -->
+		<?rfc include='reference.I-D.ietf-roll-capabilities.xml'?>	<!-- Capabilities draft -->
     </references>
 
 </back>
