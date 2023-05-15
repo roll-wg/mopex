@@ -379,7 +379,7 @@
             <t>
                 IANA is requested to assign a value from the RPL Control
                 Message Options registry for the Extended MOP (MOPex) option
-                <xref target="ext-mop"/> as shown in Table 3.
+                <xref target="ext_mop"/> as shown in Table 3.
             </t>
             <texttable title="New options">
                 <ttcol align='center'>Value</ttcol>
@@ -394,7 +394,7 @@
         <section title="New Registry for MOPex-value">
             <t>
                 IANA is requested to create a registry for the
-                MOPex-value <xref target="ext-mop"/>. This registry should be located in
+				MOPex-value <xref target="ext_mop"/>. This registry should be located in
                 the Routing Protocol for Low Power and Lossy Networks (RPL) group.  New MOPex values may be allocated only by an IETF
                 review. Currently no values are defined by this document. Each
                 value is tracked with the following qualities:
