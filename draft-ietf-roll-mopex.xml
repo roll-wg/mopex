@@ -106,12 +106,13 @@
          keywords will be used for the search engine. -->
 
     <abstract>
+      <!-- [minor] RPL and MOP should be expanded.  Also, references shouldn't be included in the Abstract. -->
         <t>
-            RPL allows different mode of operations which allows nodes to have
-            a consensus on the basic primitives that must be supported to join
-            the network. The MOP field in <xref target="RFC6550"/> is of 3 bits
-            and is fast depleting. This document extends the MOP for future
-            use.
+          The Routing Protocol for Low-Power and Lossy Networks (RPL) can have
+          different modes of operation (MOP) to allow nodes to agree on the
+          basic primitives that must be supported to join a network.  The MOP
+          field defined in RFC6550 is fast depleting.  This document specifies
+          an extended MOP option for future use.
         </t>
     </abstract>
 </front>
@@ -133,7 +134,7 @@
             value. For example, in the case of MOP=3 (Storing MOP with multicast
             support), the nodes can join the network as routers only when they
             can handle the DAO advertisements from the peers and manage routing
-            tables. The 3-bit value is already exhausted and requires
+            tables. The 3-bit value is fast depleting and requires
             replenishment. This document introduces a mechanism to extend the mode
             of operation values.
         </t>
@@ -195,11 +196,11 @@
 
     <section anchor="requirements" title="Requirements for this document">
         <t>
-            Following are the requirements considered for this documents:
+            The following are the requirements considered for this document:
             <list style="format REQ%d:">
                 <t>
 					MOP extension. The 3-bits MOP as defined in [RFC6550] is
-					fast depleting. An MOP extension needs to extend the
+					fast depleting. A MOP extension needs to extend the
 					possibility of adding new MOPs in the future.
                 </t>
                 <t>
@@ -214,8 +215,8 @@
 
     <section anchor="ext_mop" title="Extended MOP Control Message Option">
         <t>
-            This document reserves the existing MOP value 7 to be used as an
-            extender. DIO messages with an MOP value of 7 MUST refer to the
+            This document assigns MOP value 7 to be used as an
+            extender <xref target="IANA"/>. DIO messages with an MOP value of 7 MUST refer to the
             Extended MOP (MOPex) option in the DIO message.
         </t>
         <t>
@@ -223,14 +224,14 @@
             Option"><artwork align="center"><![CDATA[
  0                   1                   2
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---------------
-|   Type = TODO |  Opt Length   |     OP-value
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+---------------
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|   Type = TBD1 | Option Length |  MOPex-value  |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
            ]]></artwork> </figure>
         </t>
         <t>
-            The option length value MUST be less than or equal to 2. An option
-            length value of zero is invalid and the implementation MUST
+            The Option Length value MUST be less than or equal to 2. An Option
+            Length value of zero is invalid and the implementation MUST
             silently ignore the DIO on receiving a value of zero.
         </t>
         <section title="Handling MOPex">
@@ -260,8 +261,8 @@
     </section>
     <section title="Extending RPL Control Options" anchor="ext-opts">
         <t>
-            Section 6.7.1 of RFC6550 explains the RPL Control Message Option
-            Generic Format. This document extends this format to following:
+            Section 6.7.1 of RFC6550 describes the RPL Control Message Option
+            Generic Format. This document extends the format as follows:
         </t>
         <t>
             <figure align="center" anchor="ext-opt"
@@ -270,17 +271,17 @@
  0                   1                   2
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-----------
-|X|   OptionType| Option Length |Opt Flags|J|I|C| Option Data
+|X| Option Type | Option Length |Opt Flags|J|I|C| Option Data
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-----------
            ]]></artwork> </figure>
         </t>
         <t>
-            New fields in extended RPL Control Message Option Format:
+            The new fields in the Extended RPL Option are specified as follows:
             <list>
                 <t>
                     'X' bit in Option Type: Value 1 indicates that this is an
                     extended option. If the 'X' flag is set, a 1-byte Option
-                    Flags follows the Option Length field.
+                    Flags field follows the Option Length field.
                 </t>
                 <t>
                     Option Length: 8-bit unsigned integer, representing the
@@ -298,7 +299,7 @@
                     generating the corresponding message. E.g., if a 6LR
                     receives a DIO message with an unknown Option with 'C' bit
                     set and if the 6LR chooses to accept this node as the
-                    preferred parent then the node MUST copy this option in the
+                    preferred parent then the node must copy this option in the
                     subsequent DIO message it generates. Alternatively, if the
                     'C' flag is unset the node MUST strip off the option and
                     process the message.
@@ -313,7 +314,7 @@
         </t>
         <t>
             Note that this format does not deprecate the previous format, it
-            simply extends it and the new format is applicable only when 2nd bit
+            simply extends it. The new format is applicable only when the most significant bit (MSB)
             ('X' flag) of the Option Type is set. Option Type 0x80 to 0xFF are
             thus applicable only as extended options.
         </t>
@@ -342,9 +343,9 @@
     <section anchor="imp-con" title="Implementation Considerations">
         <t>
             In <xref target = "RFC6550" />, it was possible to discard an
-            unsupported DIO-MOP just by inspecting the base message. With this
-            document, the MOPex is a different control message option and thus
-            the discarding of the DIO message can only happen after inspecting the
+            unsupported MOP just by inspecting the base DIO message. With the extensions in this
+            document, the MOPex is in a control message option and thus
+            discarding of the DIO message can only happen after inspecting the
             message options.
         </t>
     </section>
@@ -362,7 +363,7 @@
                 IANA is requested to assign a new Mode of Operation, named
                 "MOPex" for MOP extension under the RPL registry. The value of
                 7 is to be assigned from the "Mode of Operation" space <xref
-                    target="RFC6550"/>
+                    target="RFC6550"/>.
             </t>
             <texttable title="Mode of Operation">
                 <ttcol align='center'>Value</ttcol>
@@ -374,11 +375,11 @@
                 <c>This document</c>
             </texttable>
         </section>
-        <section title="New options: MOPex and Capabilities">
+        <section title="New option: Extended MOP (MOPex)">
             <t>
-                A new entry is required for supporting new option "MOPex" in
-                the "RPL Control Message Options" space <xref
-                    target="RFC6550"/>.
+                IANA is requested to assign a value from the RPL Control
+                Message Options registry for the Extended MOP (MOPex) option
+                <xref target="ext-mop"/> as shown in Table 3.
             </t>
             <texttable title="New options">
                 <ttcol align='center'>Value</ttcol>
@@ -386,21 +387,21 @@
                 <ttcol align='center'>Reference</ttcol>
 
                 <c>TBD1</c>
-                <c>MOPex</c>
+                <c>Extended MOP (MOPex)</c>
                 <c>This document</c>
             </texttable>
         </section>
-        <section title="New Registry for Extended-MOP-value">
+        <section title="New Registry for MOPex-value">
             <t>
                 IANA is requested to create a registry for the
-                extended-MOP-value (MOPex). This registry should be located in
-                TODO.  New MOPex values may be allocated only by an IETF
+                MOPex-value <xref target="ext-mop"/>. This registry should be located in
+                the Routing Protocol for Low Power and Lossy Networks (RPL) group.  New MOPex values may be allocated only by an IETF
                 review. Currently no values are defined by this document. Each
                 value is tracked with the following qualities:
                 <list style="symbols">
                     <t>MOPex value</t>
                     <t>Description</t>
-                    <t>Defining RFC</t>
+                    <t>Reference</t>
                 </list>
             </t>
         </section>
@@ -434,7 +435,7 @@
             The options defined in this document are carried in the base
             message objects as defined in <xref target = "RFC6550" />. The RPL
             control message options are protected by the same security
-            mechanisms that protect the base messages.
+            mechanisms that protect the base messages. As such, the Security Consideration in [RFC6550] apply.
         </t>
         <t>
             Capabilities flag can reveal that the node has been upgraded or is
