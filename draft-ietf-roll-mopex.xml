@@ -7,11 +7,11 @@
      An alternate method (rfc include) is described in the references. -->
 
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC3552 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.3552.xml">
 <!ENTITY RFC6550 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6550.xml">
+<!ENTITY RFC9008 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.9008.xml">
 <!ENTITY RFC6345 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6345.xml">
-<!ENTITY RFC6775 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.6775.xml">
-<!ENTITY RFC5191 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5191.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <!-- used by XSLT processors -->
@@ -148,15 +148,19 @@
                 <t> Strip off the option </t>
                 <t> Copy the option as-is </t>
                 <t> Ignore the message containing this option </t>
-                <t> Let the node join in only as a 6LN to this parent </t>
+                <t> Let the node join in only as a leaf to this parent </t>
             </list>
         </t>
 
         <section title="Requirements Language and Terminology">
-            <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
-                NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL"
-                in this document are to be interpreted as described in <xref
-                    target="RFC2119">RFC 2119</xref>.</t>
+			<t>
+				The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+                NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+                "MAY", and "OPTIONAL" in this document are to be interpreted as
+				described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they
+                appear in all capitals, as shown here.
+
+			</t>
 
             <t>
                 MOP: Mode of Operation. Identifies the mode of operation of the
@@ -170,25 +174,16 @@
             </t>
 
             <t>
-                DAO: DODAG Advertisement Object. An RPL message used to
-                advertise the target information to establish routing
-                adjacencies.
+				DAO: Destination Advertisement Object (see Section 6.4 of <xref target="RFC6550"/>)
             </t>
 
             <t>
-                DIO: DODAG Information Object. An RPL message initiated by the
-                root and used to advertise the network configuration
-                information.
-            </t>
-
-            <t>
-                Current parent: Parent 6LR node before switching to the new
-                path.
+				DIO: DODAG Information Object (see Section 6.3 of <xref target="RFC6550"/>)
             </t>
 
             <t>
                 This document uses the terminology described in <xref
-                    target="RFC6550"/>. For the sake of readability, all the
+                    target="RFC6550"/>. For the sake of readability, some of the
                 known relevant terms are repeated in this section.
             </t>
         </section>
@@ -216,8 +211,7 @@
     <section anchor="ext_mop" title="Extended MOP Control Message Option">
         <t>
             This document assigns MOP value 7 to be used as an
-            extender <xref target="IANA"/>. DIO messages with an MOP value of 7 MUST refer to the
-            Extended MOP (MOPex) option in the DIO message.
+			extender <xref target="IANA"/>. A DIO message with a MOP value of 7 indicates that the MOP for RPL instance is contained in the Extended MOP (MOPex) option.
         </t>
         <t>
             <figure align="center" anchor="mopex-opt" title="Extended MOP
@@ -232,36 +226,39 @@
         <t>
             The Option Length value MUST be less than or equal to 2. An Option
             Length value of zero is invalid and the implementation MUST
-            silently ignore the DIO on receiving a value of zero.
+            silently ignore the DIO on receiving a value of zero. Section 6.7.1
+			of <xref target="RFC6550"/> explains how to interpret Option Length
+			and subsequent Option Data (which is MOPex-value in this context).
         </t>
         <section title="Handling MOPex">
             <t>
-                The MOPex option MUST be used only if the base DIO MOP is 7. If
-                the base DIO MOP is 7 and if the MOPex option is not present
-                then the DIO MUST be silently ignored. If the base DIO MOP is
+                The MOPex option MUST be used only if the DIO MOP is 7. If
+                the DIO MOP is 7 and if the MOPex option is not present or invalid
+                then the DIO MUST be silently ignored. If the DIO MOP is
                 less than 7 then MOPex MUST NOT be used. In case the base
                 MOP is 7 and if the MOPex option is present, then the
-                implementation MUST use the final MOP value from the MOPex.
+                implementation MUST use the MOPex value.
             </t>
             <t>
                 Note that <xref target="RFC6550"/> allows a node that does not
                 support the received MOP to still join the network as a leaf
-                node. This semantics continues to be true even in the case of MOPex.
+				node. This semantics continues to be true even in the case of MOPex.
+                All the general assumptions that are applicable in the context
+                of MOP are applicable in the context of MOPex as well.
             </t>
         </section>
         <section title="Use of values 0-6 in the MOPex option">
             <t>
-                The MOPex option could also be allowed to re-use the values
-                0-6, which have been used for MOP so far.  The use of current
-                MOPs in MOPex indicates that the MOP is supported with an extended
-                set of semantics e.g., the capability options <xref
-                    target="I-D.ietf-roll-capabilities"/>.
+                The MOPex option should also be used for existing MOP values
+                0-6. The use of current MOPs (values 0 to 6) in MOPex indicates
+				that the MOP might be supported with an extended set of semantics e.g.,
+				the capability options <xref target="I-D.ietf-roll-capabilities"/>.
             </t>
         </section>
     </section>
     <section title="Extending RPL Control Options" anchor="ext-opts">
         <t>
-            Section 6.7.1 of RFC6550 describes the RPL Control Message Option
+			Section 6.7.1 of <xref target="RFC6550"/> describes the RPL Control Message Option
             Generic Format. This document extends the format as follows:
         </t>
         <t>
@@ -271,13 +268,18 @@
  0                   1                   2
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-----------
-|X| Option Type | Option Length |Opt Flags|J|I|C| Option Data
+|X| Option Type | Option Length | Option Flags  | Option Data
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-----------
            ]]></artwork> </figure>
         </t>
         <t>
             The new fields in the Extended RPL Option are specified as follows:
             <list>
+                <t>
+                    Option Type: 8-bit identifier of the type of option. The
+                    Option Type values are assigned by IANA (see Section 20.4 of
+                    <xref target="RFC6550"/>).
+                </t>
                 <t>
                     'X' bit in Option Type: Value 1 indicates that this is an
                     extended option. If the 'X' flag is set, a 1-byte Option
@@ -290,33 +292,40 @@
                     Option Data fields are included in the length.
                 </t>
                 <t>
-                    'J' (Join) bit in Option Flags: A node MUST join only as a
-                    6LN if the Option Type is not understood.
+                    Option Flags: 8-bit unsigned integer, representing flags
+                    in the context of the Extended RPL Control Option.
+                    This document defines three flags 'J', 'C', and 'I'. These
+                    flags only apply if the Option Type is unknown or
+                    unsupported.
+		<figure align="center" anchor="option-flags"
+			title="Option Flags in Extended RPL Control Option"><artwork align="center">
+				<![CDATA[
+ 0 1 2 3 4 5 6 7
++-+-+-+-+-+-+-+-+
+| Unused  |J|I|C|
++-+-+-+-+-+-+-+-+
+           ]]></artwork> </figure>
                 </t>
                 <t>
-                    'C' (Copy) bit in Option Flags: A node that does not
-                    understand the Option Type MUST copy the Option while
-                    generating the corresponding message. E.g., if a 6LR
-                    receives a DIO message with an unknown Option with 'C' bit
-                    set and if the 6LR chooses to accept this node as the
-                    preferred parent then the node must copy this option in the
-                    subsequent DIO message it generates. Alternatively, if the
-                    'C' flag is unset the node MUST strip off the option and
-                    process the message.
+                    'J' (Join) flag: If set, the node MAY only join the network
+                    as a leaf.
                 </t>
                 <t>
-                    'I' (Ignore) bit in Option Flags: A node that does not
-                    understand the Option Type MUST ignore this whole message if
-                    the 'I' bit is set. If the 'I' bit is set then the value of 'J'
-                    and 'C' bits are irrelevant and the message MUST be ignored.
+                    'C' (Copy) flag: If set, the node MUST copy this Option Type
+                    in the DIO message it generates. If unset, the node MUST
+                    strip off the Option and process the message.
+                </t>
+                <t>
+                    'I' (Ignore) flag: If set, the node MUST ignore the whole
+                    message regardless of the setting of the J and C flags.
                 </t>
             </list>
         </t>
         <t>
             Note that this format does not deprecate the previous format, it
-            simply extends it. The new format is applicable only when the most significant bit (MSB)
-            ('X' flag) of the Option Type is set. Option Type 0x80 to 0xFF are
-            thus applicable only as extended options.
+            simply extends it. The new format is applicable only when the most
+            significant bit (MSB), 'X' flag, of the Option Type is set. Option
+            Type 0x80 to 0xFF are thus applicable only as extended options.
         </t>
         <texttable anchor="table_bits" title="Option Flags handling">
             <ttcol align='center'>'J' bit</ttcol>
@@ -325,35 +334,46 @@
 
             <c>0</c>
             <c>0</c>
-            <c>Strip off the option, and the node can join as 6LR</c>
+            <c>Strip off the option, and the node can join as RPL router</c>
             <c>0</c>
             <c>1</c>
-            <c>Copy the option, and the node can join as 6LR</c>
+            <c>Copy the option, and the node can join as RPL router</c>
             <c>1</c>
             <c>NA</c>
-            <c>Join as 6LN</c>
+            <c>Join as leaf</c>
         </texttable>
-        <t>
-            If a node receives an unknown Option without 'X' flag set then the
-            node MUST ignore the option and process the message. The option MUST
-            be treated as if J=0, C=0, I=0.
-        </t>
     </section>
 
     <section anchor="imp-con" title="Implementation Considerations">
         <t>
             In <xref target = "RFC6550" />, it was possible to discard an
-            unsupported MOP just by inspecting the base DIO message. With the extensions in this
+            unsupported MOP just by inspecting the DIO base object. With the extensions in this
             document, the MOPex is in a control message option and thus
             discarding of the DIO message can only happen after inspecting the
             message options.
         </t>
+		<t>
+            An implementation should carefully set the Option Flags considering
+			implications of nodes not supporting the corresponding Option Type.
+			<t>
+                Unsetting the 'J' flag means that a node receiving an
+                unsupported Option Type would be allowed to join as a RPL
+                router. Thus the implementation should carefully consider the
+                implications of such a node joining the network as a RPL router.
+			</t>
+			<t>
+                Setting the 'C' (Copy) bit should be carefully considered since
+                the node would copy the Option of its preferred parent whose DIO
+                it has accepted from the set of parent nodes.
+			</t>
+		</t>
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
         <t>
             Thank you Dominique Barthel for important review/feedback on
-            extending Control Options.
+            extending Control Options. Thanks to Alvaro Retana for shaping the
+            final version with detailed review comments.
         </t>
     </section>
 
@@ -374,12 +394,24 @@
                 <c>MOPex</c>
                 <c>This document</c>
             </texttable>
+			<t>
+				This document updated <xref target="RFC9008"/> to remove the
+				reservation on Mode of Operation value 7.
+
+				IANA is requested to assign the Mode of Operation value 7 to MOPex,
+				as shown in Table 2.  As shown there, all other references related
+				to value 7 are to be removed.
+
+				IANA is also requested to replace the reference to
+				<xref target="RFC9008"/> in the overall registry with a reference
+				to this document.
+			</t>
         </section>
         <section title="New option: Extended MOP (MOPex)">
             <t>
                 IANA is requested to assign a value from the RPL Control
                 Message Options registry for the Extended MOP (MOPex) option
-                <xref target="ext-mop"/> as shown in Table 3.
+                <xref target="ext_mop"/> as shown in Table 3.
             </t>
             <texttable title="New options">
                 <ttcol align='center'>Value</ttcol>
@@ -391,42 +423,48 @@
                 <c>This document</c>
             </texttable>
         </section>
-        <section title="New Registry for MOPex-value">
+        <section title="New Registry for MOPex value">
             <t>
                 IANA is requested to create a registry for the
-                MOPex-value <xref target="ext-mop"/>. This registry should be located in
-                the Routing Protocol for Low Power and Lossy Networks (RPL) group.  New MOPex values may be allocated only by an IETF
-                review. Currently no values are defined by this document. Each
-                value is tracked with the following qualities:
-                <list style="symbols">
-                    <t>MOPex value</t>
-                    <t>Description</t>
-                    <t>Reference</t>
-                </list>
+				MOPex-value <xref target="ext_mop"/>. This registry should be located in
+                the Routing Protocol for Low Power and Lossy Networks (RPL) group. New MOPex values may be allocated only by an IETF
+                review. Each value is tracked with the following qualities:
             </t>
+			<list style="symbols">
+				<t>MOPex value</t>
+				<t>Description</t>
+				<t>Reference</t>
+			</list>
+			<texttable title="Registry for MOPex values">
+				<ttcol align='center'>MOPex Value</ttcol>
+				<ttcol align='center'>Description</ttcol>
+				<ttcol align='center'>Reference</ttcol>
+
+				<c>0 to 6</c>
+				<c>MOP</c>
+				<c>[RFC6550]</c>
+			</texttable>
         </section>
         <section title="Change in RPL Control Option field">
-            <t>
-                <xref target="ext-opts"/> of this document specifies MSB of the
-                RPL Control Option to be used as a bit to indicate RPL Extended
-                Control Options.
-            </t>
-            <t>
-                IANA is requested to reduce the unassigned values range from
-                0x10 to 0x7f for RPL Control Options.
-            </t>
-            <t>
-                IANA is requested to create a new registry for RPL Extended
-                Control Options indicating values 0x80 to 0xff. New values may
-                be allocated only by an IETF Review. Each value is tracked with
-                the following qualities:
-                <list style="symbols">
-                    <t>Value</t>
-                    <t>Meaning</t>
-                    <t>Defining RFC</t>
-                </list>
-                The value could be in the range of 0x80 to 0xff.
-            </t>
+			<t>
+				IANA is requested to modify the RPL Control Message Options registry
+				to include an Extended Control Options range as shown in <xref target="rpl-ctrl-opt"/>.
+                IANA is also requested to add [this document] as a reference for
+                this updated registry.
+			</t>
+			<texttable anchor="rpl-ctrl-opt" title="Registry for RPL Control Option">
+				<ttcol align='center'>Range</ttcol>
+				<ttcol align='center'>Option Type</ttcol>
+				<ttcol align='center'>Reference</ttcol>
+
+				<c>0x00 to 0x7f</c>
+				<c>Base Options</c>
+				<c>[RFC6550]</c>
+
+				<c>0x80 to 0xFf</c>
+				<c>Extended Options</c>
+				<c>[this document]</c>
+			</texttable>
         </section>
     </section>
 
@@ -438,7 +476,7 @@
             mechanisms that protect the base messages. As such, the Security Consideration in [RFC6550] apply.
         </t>
         <t>
-            Capabilities flag can reveal that the node has been upgraded or is
+            The use of MOP 7 can reveal that the node has been upgraded or is
             running a old feature set. This document assumes that the base
             messages that carry these options are protected by RPL security
             mechanisms and thus are not visible to a malicious node.
@@ -463,7 +501,9 @@
     <references title="Normative References">
         <!--?rfc include="http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml"?-->
         &RFC2119;
+        &RFC8174;
         &RFC6550;
+        &RFC9008;
     </references>
 
     <references title="Informative References">
